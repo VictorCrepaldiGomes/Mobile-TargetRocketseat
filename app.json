@@ -2,6 +2,22 @@
   "expo": {
     "name": "target",
     "slug": "target",
-    "version": "1.0.0"
+    "scheme": "target",
+    "version": "1.0.0",
+    "android": {
+      "package": "com.victorg.target",
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/iconAndroid.png",
+        "backgroundColor": "#3d4dc3"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.victorg.target",
+      "icon": "./assets/iconIOS.png"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
