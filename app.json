@@ -17,7 +17,8 @@
       "icon": "./assets/iconIOS.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
   }
 }
