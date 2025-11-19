@@ -8,15 +8,16 @@ export const styles = StyleSheet.create({
   listContent: {
     paddingBottom: 72,
     gap: 12,
-    paddingTop: 16,
+    padding: 16,
   },
   title: {
     marginTop: 24,
+    paddingLeft: 16,
     paddingBottom: 16,
     borderBottomColor: colors.gray[200],
     borderBottomWidth: 1,
     fontSize: 18,
-    fontFamily: font.medium
+    fontFamily: font.medium,
   },
   empty: {
     textAlign: "center",
