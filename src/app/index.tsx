@@ -1,41 +1,70 @@
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, Alert } from "react-native";
 import HomeHeader from "@/components/HomeHeader";
-import Target from "@/components/Target"
+import Target from "@/components/Target";
 import List from "@/components/List";
 import { Button } from "@/components/Buttons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import {
+  useTargetDatabase,
+  TargetResponse,
+} from "@/database/useTargetDatabase";
+import { useCallback } from "react";
+import { useState } from "react";
+
+type TargetUIData = {
+  id: string;
+  name: string;
+  current: string;
+  percentage: string;
+  target: string;
+};
 
 const sumarry = {
-  total: "R$ 100,00",
+  total: "R$ 14.650,00",
   input: { label: "Entradas", value: "R$ 5.000,00" },
   output: { label: "Saídas", value: "R$ 2.350,00" },
 };
 
-const targets = [
-  {
-    id: "1",
-    name: "Cadeira Gamer",
-    percentage: "95%",
-    current: "R$ 2.325,00",
-    target: "R$ 3.000,00",
-  },
-  {
-    id: "2",
-    name: "Viagem",
-    percentage: "20%",
-    current: "R$ 1.400,00",
-    target: "R$ 7.450,00",
-  },
-  {
-    id: "3",
-    name: "Festa",
-    percentage: "100%",
-    current: "R$ 8.000,00",
-    target: "R$ 8.000,00",
-  },
-];
-
 export default function Index() {
+  const targetDatabase = useTargetDatabase();
+  const [targets, setTargets] = useState<TargetUIData[]>([]);
+
+  const fetchTargets = useCallback(async () => {
+    try {
+      const response = await targetDatabase.listBySavedValues();
+
+      const mappedData = response.map((item) => ({
+        id: String(item.id),
+        name: item.name,
+        current: String(item.current),
+        percentage: item.percentage.toFixed(0) + "%",
+        target: String(item.amount),
+      }));
+
+      return mappedData;
+    } catch (error) {
+      console.error("Error fetching targets:", error);
+      Alert.alert("Erro", "Não foi possível buscar as metas.");
+      return [];
+    }
+  }, [targetDatabase]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
+  async function fetchData() {
+    try {
+      const targetData = await fetchTargets();
+      setTargets(targetData || []);
+    } catch (error) {
+      console.error("Erro em fetchData:", error);
+      setTargets([]);
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" />
@@ -44,11 +73,19 @@ export default function Index() {
         title="Metas"
         data={targets}
         keyExtractor={(item: any) => item.id}
-        renderItem={({ item }: any) => <Target data={item} onPress={() => router.navigate(`/progress/${item.id}`)} />}
+        renderItem={({ item }: any) => (
+          <Target
+            data={item}
+            onPress={() => router.navigate(`/progress/${item.id}`)}
+          />
+        )}
       />
-    <View style={{ padding: 24, paddingBottom: 32 }}>
-      <Button title="Adicionar Meta" onPress={() => router.navigate("/target")} />
-    </View>
+      <View style={{ padding: 24, paddingBottom: 32 }}>
+        <Button
+          title="Adicionar Meta"
+          onPress={() => router.navigate("/target")}
+        />
+      </View>
     </View>
   );
 }
