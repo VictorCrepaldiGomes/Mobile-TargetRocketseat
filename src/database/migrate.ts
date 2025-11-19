@@ -16,7 +16,7 @@ export async function migrate(database: SQLiteDatabase) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       target_id INTEGER NOT NULL,
       amount FLOAT NOT NULL,
-      obervation TEXT NULL,
+      observation TEXT NULL,
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now')),
 
