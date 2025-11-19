@@ -10,6 +10,7 @@ import {
 } from "@/database/useTargetDatabase";
 import { useCallback } from "react";
 import { useState } from "react";
+import NumberToCurrency from "@/utils/numberToCurrency";
 
 type TargetUIData = {
   id: string;
@@ -36,9 +37,9 @@ export default function Index() {
       const mappedData = response.map((item) => ({
         id: String(item.id),
         name: item.name,
-        current: String(item.current),
+        current: NumberToCurrency(item.current),
         percentage: item.percentage.toFixed(0) + "%",
-        target: String(item.amount),
+        target: NumberToCurrency(item.amount),
       }));
 
       return mappedData;
